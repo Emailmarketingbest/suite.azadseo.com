@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azad SEO All-In-One Professional Web Suite</title>
+    <link rel="icon" type="image/png" href="icon.png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Dexie.js (Local + CDN fallback) -->
+    <script src="dexie.min.js"></script>
+    <script>if (typeof Dexie === 'undefined') document.write('<script src="https://unpkg.com/dexie@latest/dist/dexie.js"><\/script>');</script>
+
+    <!-- html2pdf.js (Local + CDN fallback) -->
+    <script src="html2pdf.bundle.min.js"></script>
+    <script>if (typeof html2pdf === 'undefined') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>');</script>
+
+    <!-- QRCode.js (Local + CDN fallback) -->
+    <script src="qrcode.min.js"></script>
+    <script>if (typeof QRCode === 'undefined') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>');</script>
+
+    <!-- Embedded Base64 Brand Assets for CORS-free local & GitHub Pages PDF rendering -->
+    <script src="assets_base64.js"></script>
+    <script src="assets_data.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand & Logo -->
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="Azad SEO" class="h-12 w-auto object-contain" onerror="this.src='icon.png'">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl font-extrabold tracking-tight text-slate-900">AZAD SEO</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-800 uppercase tracking-wider">Web Suite</span>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">Invoicing • Salary System • 42+ Tools Autofill</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <button id="tab-btn-tools" class="nav-tab active flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-sky-600 bg-sky-50">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                        <span>Tools & Autofill</span>
+                    </button>
+                    <button id="tab-btn-invoice" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-600 hover:text-sky-600 hover:bg-slate-50">
+                        <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+                        <span>Invoice Maker</span>
+                    </button>
+                    <button id="tab-btn-salary" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-600 hover:text-sky-600 hover:bg-slate-50">
+                        <i class="fa-solid fa-calculator text-sm"></i>
+                        <span>Salary & Shifts</span>
+                    </button>
+                    <button id="tab-btn-settings" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-600 hover:text-sky-600 hover:bg-slate-50">
+                        <i class="fa-solid fa-database text-sm"></i>
+                        <span>Settings & Data</span>
+                    </button>
+                </nav>
+
+                <!-- Quick Status Badge -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>IndexedDB Active</span>
+                    </div>
+                    <button onclick="triggerDatabaseBackup()" title="1-Click JSON Backup" class="p-2 rounded-xl text-slate-500 hover:text-sky-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-cloud-arrow-down text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Bar -->
+            <div class="flex md:hidden border-t border-slate-100 py-2.5 px-2 justify-around bg-slate-50/80 backdrop-blur-sm">
+                <button id="mob-tab-tools" onclick="switchTab('tools')" class="mob-nav-btn active text-[11px] font-bold text-sky-600 flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all">
+                    <i class="fa-solid fa-wand-magic-sparkles text-sm"></i><span>Tools</span>
+                </button>
+                <button id="mob-tab-invoice" onclick="switchTab('invoice')" class="mob-nav-btn text-[11px] font-bold text-slate-500 flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all">
+                    <i class="fa-solid fa-file-invoice-dollar text-sm"></i><span>Invoice</span>
+                </button>
+                <button id="mob-tab-salary" onclick="switchTab('salary')" class="mob-nav-btn text-[11px] font-bold text-slate-500 flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all">
+                    <i class="fa-solid fa-calculator text-sm"></i><span>Salary</span>
+                </button>
+                <button id="mob-tab-settings" onclick="switchTab('settings')" class="mob-nav-btn text-[11px] font-bold text-slate-500 flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all">
+                    <i class="fa-solid fa-sliders text-sm"></i><span>Settings</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+        <!-- ==================================================================== -->
+        <!-- VIEW 1: TOOLS & MARKETING PLANS MODULE                               -->
+        <!-- ==================================================================== -->
+        <section id="view-tools" class="space-y-6">
+            <!-- View Selector Header: Combo Plans vs. Single Tools -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 card-shadow">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button id="subview-btn-plans" onclick="switchToolsSubView('plans')" 
+                            class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-sm transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Marketing Combo Plans (4 Posters)</span>
+                    </button>
+                    <button id="subview-btn-tools" onclick="switchToolsSubView('tools')" 
+                            class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-cubes"></i>
+                        <span>42+ Single SEO Tools</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button onclick="openAddToolModal()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span>Add Tool</span>
+                    </button>
+                    <button onclick="exportToolsForGitHub()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors" title="Export tools as JSON to update default catalog on GitHub">
+                        <i class="fa-solid fa-cloud-arrow-down text-slate-500"></i>
+                        <span>Export for GitHub</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUB-VIEW A: MARKETING PLANS SHOWCASE -->
+            <div id="marketing-plans-section" class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Facebook Marketing Combo Plans</h3>
+                        <p class="text-xs text-slate-400">Click any poster to copy its image directly to your clipboard for WhatsApp! Or upload your own custom plans.</p>
+                    </div>
+                    <button onclick="openAddPlanModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all self-start sm:self-auto">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span>Add New Plan</span>
+                    </button>
+                </div>
+
+                <div id="marketing-plans-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Injected by tools.js -->
+                </div>
+            </div>
+
+            <!-- SUB-VIEW B: SINGLE TOOLS CATALOG -->
+            <div id="single-tools-section" class="hidden space-y-6">
+                <!-- Search & Filter Bar -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow space-y-4">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="relative w-full sm:w-96">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                            <input type="text" id="tool-search-input" placeholder="Search 42+ tools by name, keyword or specs..." 
+                                   class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tools-count-badge" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold font-mono-code">42 Tools</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Filters -->
+                    <div id="tool-categories-container" class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                        <!-- Injected by tools.js -->
+                    </div>
+                </div>
+
+                <!-- Tools Grid -->
+                <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <!-- Injected by tools.js -->
+                </div>
+            </div>
+
+            <!-- Floating Package Builder Dock -->
+            <div id="package-dock" class="package-dock hidden bg-white/95 backdrop-blur-md rounded-2xl border border-slate-300 shadow-2xl p-4 transition-all">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
+                        <h4 class="font-black text-slate-800 text-sm tracking-tight uppercase">Custom Package Builder</h4>
+                    </div>
+                    <span id="dock-item-count" class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold font-mono-code">0 Items</span>
+                </div>
+
+                <!-- Selected Items Chips -->
+                <div id="dock-selected-items" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto mb-3 pr-1">
+                    <!-- Injected chips -->
+                </div>
+
+                <!-- Pricing & Actions Grid -->
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 text-xs mb-3">
+                    <div class="flex justify-between text-slate-500">
+                        <span>Tools Subtotal:</span>
+                        <span id="dock-subtotal" class="font-mono-code font-bold text-slate-700">0 PKR</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-500">
+                        <span class="flex items-center gap-1">Package Discount:</span>
+                        <div class="flex items-center gap-1 w-20">
+                            <input type="number" id="package-discount-input" min="0" max="100" value="0" 
+                                   class="w-12 text-right font-mono-code text-xs font-bold px-1.5 py-0.5 rounded border border-slate-200">
+                            <span class="font-bold">%</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-emerald-600">
+                        <span>Discount Savings:</span>
+                        <span id="dock-discount-amt" class="font-mono-code font-bold">-0 PKR</span>
+                    </div>
+                    <div class="border-t border-slate-200 pt-1.5 flex justify-between font-extrabold text-sm text-slate-900">
+                        <span>Package Net Total:</span>
+                        <span id="dock-net-total" class="font-mono-code text-sky-700">0 PKR</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="copyPackageWhatsApp()" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Copy WhatsApp</span>
+                    </button>
+                    <button onclick="sendPackageToInvoice()" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors">
+                        <i class="fa-solid fa-file-invoice text-sm"></i>
+                        <span>Send to Invoice</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================== -->
+        <!-- VIEW 2: INVOICE MAKER MODULE                                         -->
+        <!-- ==================================================================== -->
+        <section id="view-invoice" class="hidden space-y-8">
+            <!-- Invoice Configuration & Client Header -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow space-y-6">
+                <!-- Top Settings Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Invoice Number</span>
+                        <span id="inv-number-display" class="text-xl font-black font-mono-code text-sky-700">INV-000001</span>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Invoice Date</label>
+                            <input type="date" id="inv-date" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Due Date</label>
+                            <input type="date" id="inv-due-date" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Currency</label>
+                            <select id="inv-currency-select" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                                <option value="PKR" selected>PKR (Rs)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="AED">AED</option>
+                                <option value="SAR">SAR</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Payment Status</label>
+                            <select id="inv-status-select" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                                <option value="Paid" selected>Paid</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Unpaid">Unpaid</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Template Style</label>
+                            <select id="inv-template-select" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                                <option value="tpl-modern-blue" selected>Modern Blue</option>
+                                <option value="tpl-emerald-classic">Emerald Classic</option>
+                                <option value="tpl-dark-executive">Dark Executive</option>
+                                <option value="tpl-minimalist">Minimalist Gray</option>
+                                <option value="tpl-purple-pro">Purple Pro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Details Grid -->
+                <div>
+                    <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-3">Client Information</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Client Name *</label>
+                            <input type="text" id="inv-client-name" list="clients-datalist" placeholder="e.g. John Doe or Business Name" 
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500/20">
+                            <datalist id="clients-datalist"></datalist>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Client Email</label>
+                            <input type="email" id="inv-client-email" placeholder="client@example.com" 
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Client Phone / WhatsApp</label>
+                            <input type="text" id="inv-client-phone" placeholder="+92 300 1234567" 
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Billing Address</label>
+                            <input type="text" id="inv-client-address" placeholder="City, Country" 
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Items Table -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Invoice Items & Tools</h3>
+                        <div class="flex items-center gap-2">
+                            <button onclick="switchTab('tools')" class="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Browse Catalog</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <table class="w-full text-left border-collapse custom-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-10 text-center">#</th>
+                                    <th>Item / Description</th>
+                                    <th class="w-20 text-center">Qty</th>
+                                    <th class="w-24 text-center">Days</th>
+                                    <th class="w-32 text-right">Unit Price</th>
+                                    <th class="w-32 text-right">Total</th>
+                                    <th class="w-12 text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items-body">
+                                <!-- Injected by invoice.js -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-3">
+                        <button onclick="addInvoiceItem()" class="px-4 py-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 text-xs font-bold flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Add Item Row</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Financial Calculation & Notes Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-4 border-t border-slate-100">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Terms & Conditions</label>
+                                <textarea id="inv-terms" rows="3" class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-1 focus:ring-sky-500" placeholder="Terms of service...">• Shared access is provided for 30 days.
+• No account sharing or password changes allowed.
+• Issues must be reported within 24 hours of delivery.</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Notes / Remarks</label>
+                                <textarea id="inv-notes" rows="3" class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-1 focus:ring-sky-500" placeholder="Notes for client...">Thank you for choosing Azad SEO! For instant support, reach out to our WhatsApp helpdesk.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Financial Calculation -->
+                    <div class="lg:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                        <div class="flex justify-between text-xs text-slate-600">
+                            <span>Subtotal:</span>
+                            <span id="inv-subtotal-display" class="font-mono-code font-bold text-slate-800">0 PKR</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-slate-600">
+                            <span class="flex items-center gap-1">Tax Rate:</span>
+                            <div class="flex items-center gap-1 w-24">
+                                <input type="number" id="inv-tax-rate" min="0" max="100" value="0" 
+                                       class="w-16 text-right font-mono-code text-xs font-bold px-2 py-1 rounded border border-slate-200">
+                                <span class="font-bold">%</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-600">
+                            <span>Calculated Tax:</span>
+                            <span id="inv-tax-display" class="font-mono-code font-bold text-slate-800">+0 PKR</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-slate-600">
+                            <span class="flex items-center gap-1">Discount Amount:</span>
+                            <input type="number" id="inv-discount-amount" min="0" step="50" value="0" 
+                                   class="w-24 text-right font-mono-code text-xs font-bold px-2 py-1 rounded border border-slate-200">
+                        </div>
+                        <div class="flex justify-between text-xs text-emerald-600">
+                            <span>Total Discount:</span>
+                            <span id="inv-discount-display" class="font-mono-code font-bold">-0 PKR</span>
+                        </div>
+                        <div class="border-t-2 border-slate-200 pt-3 flex justify-between items-baseline font-extrabold text-slate-900">
+                            <span class="text-sm">Grand Total:</span>
+                            <span id="inv-grand-total-display" class="text-xl font-black font-mono-code text-sky-700">0 PKR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+                    <button onclick="addInvoiceItem()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">
+                        <i class="fa-solid fa-rotate-left mr-1.5"></i>Reset Editor
+                    </button>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="saveInvoiceToDB()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>Save Invoice</span>
+                        </button>
+                        <button onclick="openInvoicePreviewModal()" class="px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center gap-2 shadow-md transition-colors">
+                            <i class="fa-solid fa-eye"></i>
+                            <span>Preview & Download PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Invoices History Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Invoice History</h3>
+                        <p class="text-xs text-slate-400">Past generated invoices stored in local database</p>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 rounded-xl overflow-hidden">
+                    <table class="w-full text-left border-collapse custom-table">
+                        <thead>
+                            <tr>
+                                <th class="w-28">Invoice #</th>
+                                <th>Client Name</th>
+                                <th class="w-28">Date</th>
+                                <th class="w-32 text-right">Grand Total</th>
+                                <th class="w-24 text-center">Status</th>
+                                <th class="w-24 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-history-body">
+                            <!-- Injected by invoice.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================== -->
+        <!-- VIEW 3: SALARY & COMMISSION MODULE                                   -->
+        <!-- ==================================================================== -->
+        <section id="view-salary" class="hidden space-y-6">
+            <!-- Salary Control Header -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Employee Shift</label>
+                            <select id="salary-user-select" class="px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white min-w-[220px]">
+                                <!-- Injected by salary.js -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Month</label>
+                            <select id="salary-month-select" class="px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Year</label>
+                            <input type="number" id="salary-year-select" min="2020" max="2035" class="w-24 px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono-code text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Base Salary (PKR)</label>
+                            <input type="number" id="salary-base-input" min="0" step="1000" value="0" placeholder="0" class="w-28 px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono-code text-slate-800">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span id="salary-autosave-badge" class="text-xs font-semibold text-slate-400 flex items-center gap-1.5 mr-2">
+                            <i class="fa-solid fa-cloud-check text-emerald-500"></i> Auto-saved
+                        </span>
+                        <button onclick="openStaffManagerModal()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors" title="Add, edit or configure shifts & staff members">
+                            <i class="fa-solid fa-users-gear text-slate-500"></i>
+                            <span>Staff & Shifts</span>
+                        </button>
+                        <button onclick="exportSalaryCSV()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-csv text-slate-500"></i>
+                            <span>Export CSV</span>
+                        </button>
+                        <button onclick="openSalarySlipModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+                            <i class="fa-solid fa-receipt text-xs"></i>
+                            <span>View Salary Slip</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Metric Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-4 border-t border-slate-100">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase block">Monthly Sales</span>
+                        <span id="kpi-total-sales" class="text-base font-black font-mono-code text-slate-800">0 PKR</span>
+                    </div>
+                    <div class="bg-sky-50 p-3 rounded-xl border border-sky-100">
+                        <span class="text-[10px] font-bold text-sky-600 uppercase block">Commission (2%)</span>
+                        <span id="kpi-total-commission" class="text-base font-black font-mono-code text-sky-700">0 PKR</span>
+                    </div>
+                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
+                        <span class="text-[10px] font-bold text-rose-500 uppercase block">Total Advance</span>
+                        <span id="kpi-total-advance" class="text-base font-black font-mono-code text-rose-600">0 PKR</span>
+                    </div>
+                    <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                        <span class="text-[10px] font-bold text-emerald-600 uppercase block">Net Payable</span>
+                        <span id="kpi-net-payable" class="text-base font-black font-mono-code text-emerald-700">0 PKR</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span id="kpi-attendance-title" class="text-[10px] font-bold text-slate-400 uppercase block">Staff Attendance</span>
+                        <div id="kpi-days-present" class="text-xs font-mono-code text-slate-700 font-bold mt-0.5">0 / 30</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase block">Avg Daily Sales</span>
+                        <span id="kpi-avg-sales" class="text-base font-bold font-mono-code text-slate-700">0 PKR</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spreadsheet Grid (1 to 31 Days) -->
+            <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+                <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Monthly Shift & Commission Register</h3>
+                        <p class="text-[11px] text-slate-400">Changes auto-save directly to IndexedDB on every keystroke</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive-wrapper overflow-x-auto max-h-[600px] overflow-y-auto">
+                    <table class="w-full text-left border-collapse custom-table">
+                        <thead class="sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="w-20 text-center sticky-col-day">Day</th>
+                                <th id="salary-header-attendance-col" class="min-w-[160px]">Staff Attendance</th>
+                                <th>Sales (PKR)</th>
+                                <th class="w-24 text-center">Comm %</th>
+                                <th class="w-32 text-right">Commission (PKR)</th>
+                                <th>Advance / Deduction</th>
+                                <th>Shift Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salary-grid-body">
+                            <!-- Injected by salary.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================== -->
+        <!-- VIEW 4: SETTINGS & DATABASE HUB                                      -->
+        <!-- ==================================================================== -->
+        <section id="view-settings" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Company Profile Settings -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Company Profile & Branding</h3>
+                        <p class="text-xs text-slate-400">Used across invoices, quotations, and official salary statements</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Company / Brand Name</label>
+                            <input type="text" id="setting-company-name" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Company Tagline</label>
+                            <input type="text" id="setting-company-tagline" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Phone</label>
+                                <input type="text" id="setting-company-phone" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Support Email</label>
+                                <input type="email" id="setting-company-email" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Office Address</label>
+                            <input type="text" id="setting-company-address" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Bank Account & Payment Instructions</label>
+                            <textarea id="setting-payment-info" rows="3" class="w-full p-2.5 rounded-xl border border-slate-200 text-xs text-slate-700 font-mono"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Invoice Prefix</label>
+                            <input type="text" id="setting-invoice-prefix" class="w-32 px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono">
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="saveSystemSettings()" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-sm transition-colors">
+                                Save Profile Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database & GitHub Pages Hub -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow space-y-6">
+                    <div class="border-b border-slate-100 pb-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">GitHub Pages Database Hub</h3>
+                                <p class="text-xs text-slate-400">IndexedDB Client-Side Engine + JSON Cloud Export/Import</p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">100% Serverless</span>
+                        </div>
+                    </div>
+
+                    <!-- Database Statistics Grid -->
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Live Database Metrics</span>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Invoices</span>
+                                <span id="stat-invoices" class="text-lg font-black font-mono-code text-slate-800">0</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Clients</span>
+                                <span id="stat-clients" class="text-lg font-black font-mono-code text-slate-800">0</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Salary Records</span>
+                                <span id="stat-salary-entries" class="text-lg font-black font-mono-code text-slate-800">0</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Tools Catalog</span>
+                                <span id="stat-tools" class="text-lg font-black font-mono-code text-sky-700">42</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Staff Shifts</span>
+                                <span id="stat-employees" class="text-lg font-black font-mono-code text-slate-800">3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backup & Restore Actions -->
+                    <div class="space-y-3 pt-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Data Backup & Portability</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="triggerDatabaseBackup()" class="p-4 rounded-xl border border-sky-200 bg-sky-50/50 hover:bg-sky-100/70 text-left transition-all">
+                                <i class="fa-solid fa-download text-sky-600 text-lg mb-1 block"></i>
+                                <span class="font-bold text-xs text-sky-900 block">Export JSON Backup</span>
+                                <span class="text-[11px] text-slate-500">Download complete database as a single file</span>
+                            </button>
+                            <button onclick="triggerDatabaseRestorePrompt()" class="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all">
+                                <i class="fa-solid fa-upload text-slate-600 text-lg mb-1 block"></i>
+                                <span class="font-bold text-xs text-slate-800 block">Import JSON Backup</span>
+                                <span class="text-[11px] text-slate-500">Restore database from existing backup file</span>
+                            </button>
+                        </div>
+
+                        <div class="pt-2">
+                            <button onclick="handleResetDatabase()" class="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                                <span>Reset All Data to Azad SEO Factory Defaults</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GitHub Pages Database Info Banner -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
+                        <div class="flex items-center gap-2 font-bold text-slate-800">
+                            <i class="fa-solid fa-circle-question text-sky-600"></i>
+                            <span>How the Database works on GitHub Pages:</span>
+                        </div>
+                        <p class="leading-relaxed">
+                            GitHub Pages only hosts static files, so traditional MySQL/PostgreSQL servers cannot run there. This suite uses 
+                            <strong>Dexie.js (IndexedDB)</strong> which gives you a high-capacity, lightning-fast database running directly inside your browser. All data stays saved even when you close the tab or restart your computer.
+                        </p>
+                        <p class="text-[11px] text-slate-500">
+                            <strong>Multi-device sync:</strong> Use the 1-click JSON export/import to transfer your data between devices, or connect free Firebase Firestore in seconds.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Hidden File Input for Database Restore -->
+    <input type="file" id="db-restore-file-input" accept=".json" class="hidden" onchange="handleDatabaseFileSelected(event)">
+
+    <!-- Invoice Live Preview Modal -->
+    <div id="invoice-preview-modal" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice text-sky-600 text-lg"></i>
+                    <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">A4 Invoice Preview</h3>
+                </div>
+                <div class="flex items-center gap-2 modal-header-actions">
+                    <button onclick="downloadInvoicePDF()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download PDF</span>
+                    </button>
+                    <button onclick="prepareAndPrint('invoice-sheet')" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Print</span>
+                    </button>
+                    <button onclick="closeModal('invoice-preview-modal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-100">
+                <div id="invoice-preview-container" class="flex justify-center">
+                    <!-- Live A4 sheet rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Salary Statement Slip Modal -->
+    <div id="salary-slip-modal" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-sky-600 text-lg"></i>
+                    <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">Official Salary Statement Slip</h3>
+                </div>
+                <div class="flex items-center gap-2 modal-header-actions">
+                    <button onclick="downloadSalarySlipPDF()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download PDF</span>
+                    </button>
+                    <button onclick="prepareAndPrint('salary-statement-sheet')" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Print</span>
+                    </button>
+                    <button onclick="closeModal('salary-slip-modal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-100">
+                <div id="salary-slip-content" class="flex justify-center">
+                    <!-- Live A4 salary slip rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tool Editor Modal (Add / Edit Tool) -->
+    <div id="tool-editor-modal" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-screwdriver-wrench text-sky-600 text-lg"></i>
+                    <h3 id="tool-modal-title" class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">Add New Tool</h3>
+                </div>
+                <button onclick="closeModal('tool-editor-modal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tool Name *</label>
+                        <input type="text" id="tool-name-input" placeholder="e.g. SEMrush Pro or Canva Pro" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Search Keyword *</label>
+                        <input type="text" id="tool-keyword-input" placeholder="e.g. semrush" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Category</label>
+                        <select id="tool-category-input" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                            <option value="SEO / Research">SEO / Research</option>
+                            <option value="Content & AI">Content & AI</option>
+                            <option value="Design & Graphics">Design & Graphics</option>
+                            <option value="E-Commerce">E-Commerce</option>
+                            <option value="Developer & Indexing">Developer & Indexing</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Price (PKR) *</label>
+                        <input type="number" id="tool-price-input" min="0" step="50" placeholder="e.g. 800" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono text-sky-700">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Usage / Duration</label>
+                        <input type="text" id="tool-specs-input" placeholder="e.g. Shared Access For 30 Days" value="Shared Access For 30 Days" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tool Picture / Promotional Card</label>
+                        <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                            <div id="tool-image-preview-container" class="w-20 h-20 rounded-xl border border-slate-200 bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                                <img id="tool-image-preview" src="" class="w-full h-full object-contain hidden" alt="Tool Preview">
+                                <i id="tool-image-placeholder" class="fa-solid fa-image text-slate-300 text-2xl"></i>
+                            </div>
+                            <div class="flex-1 space-y-1.5">
+                                <div class="flex items-center gap-2">
+                                    <label for="tool-image-file" class="cursor-pointer px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-300 flex items-center gap-1.5 shadow-xs transition-colors">
+                                        <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i>
+                                        <span>Choose Picture</span>
+                                    </label>
+                                    <input type="file" id="tool-image-file" accept="image/*" class="hidden" onchange="handleToolImageUpload(event)">
+                                    <button type="button" id="tool-image-remove-btn" onclick="removeToolImage()" class="px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 text-xs font-semibold hidden">
+                                        <i class="fa-solid fa-trash-can mr-1"></i>Remove
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-slate-400">PNG, JPG or WebP. Saved in database & enables 1-click copy to WhatsApp.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp Message Template</label>
+                        <textarea id="tool-message-input" rows="3" placeholder="Custom formatted WhatsApp script..." class="w-full p-2.5 rounded-xl border border-slate-200 text-xs text-slate-700 font-mono"></textarea>
+                        <p class="text-[10px] text-slate-400 mt-1">Leave blank to auto-generate standard Azad SEO WhatsApp quotation script.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('tool-editor-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="button" onclick="handleSaveToolForm()" id="tool-form-submit-btn" class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm">Save Tool to Database</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marketing Plan Editor Modal (Add / Edit Combo Plan) -->
+    <div id="plan-editor-modal" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-sky-600 text-lg"></i>
+                    <h3 id="plan-modal-title" class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">Add Marketing Plan</h3>
+                </div>
+                <button onclick="closeModal('plan-editor-modal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Plan Name *</label>
+                        <input type="text" id="plan-name-input" placeholder="e.g. VIP Agency Plan" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Price (PKR) *</label>
+                        <input type="number" id="plan-price-input" min="0" step="50" placeholder="e.g. 2500" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono text-sky-700">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Duration</label>
+                        <input type="text" id="plan-duration-input" placeholder="e.g. 30 Days Access" value="30 Days Access" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Badge Text</label>
+                        <input type="text" id="plan-badge-input" placeholder="e.g. Top Seller or Agency Pro" value="Special Offer" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Badge Theme</label>
+                        <select id="plan-badge-color-input" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                            <option value="bg-emerald-100 text-emerald-800">Emerald Green (Top Seller)</option>
+                            <option value="bg-blue-100 text-blue-800">Sky Blue (Popular)</option>
+                            <option value="bg-amber-100 text-amber-800">Amber Gold (Agency Pro)</option>
+                            <option value="bg-purple-100 text-purple-800">Purple (Ultimate)</option>
+                            <option value="bg-rose-100 text-rose-800">Rose Red (Limited Time)</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Short Description</label>
+                        <input type="text" id="plan-desc-input" placeholder="Brief summary of who this plan is best suited for..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Included Tools (comma-separated)</label>
+                        <input type="text" id="plan-tools-input" placeholder="e.g. Ahrefs, SEMrush Pro, Canva Pro, ChatGPT Plus" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-sky-700">
+                    </div>
+
+                    <!-- Upload Plan Poster -->
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Promotional Poster Image</label>
+                        <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                            <div id="plan-image-preview-container" class="w-24 h-28 rounded-xl border border-slate-200 bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                                <img id="plan-image-preview" src="" class="w-full h-full object-cover hidden" alt="Plan Poster Preview">
+                                <i id="plan-image-placeholder" class="fa-solid fa-image text-slate-300 text-2xl"></i>
+                            </div>
+                            <div class="flex-1 space-y-1.5">
+                                <div class="flex items-center gap-2">
+                                    <label for="plan-image-file" class="cursor-pointer px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-300 flex items-center gap-1.5 shadow-xs transition-colors">
+                                        <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i>
+                                        <span>Upload Poster</span>
+                                    </label>
+                                    <input type="file" id="plan-image-file" accept="image/*" class="hidden" onchange="handlePlanImageUpload(event)">
+                                    <button type="button" id="plan-image-remove-btn" onclick="removePlanImage()" class="px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 text-xs font-semibold hidden">
+                                        <i class="fa-solid fa-trash-can mr-1"></i>Remove
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-slate-400">Upload high-res Facebook marketing poster. Enables 1-click clipboard copy for WhatsApp!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp Message Script</label>
+                        <textarea id="plan-message-input" rows="3" placeholder="Custom formatted WhatsApp script..." class="w-full p-2.5 rounded-xl border border-slate-200 text-xs text-slate-700 font-mono"></textarea>
+                        <p class="text-[10px] text-slate-400 mt-1">Leave blank to auto-generate standard Azad SEO WhatsApp quotation script.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('plan-editor-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="button" onclick="handleSavePlanForm()" id="plan-form-submit-btn" class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm">Save Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Isolated Print Mount (Used exclusively for pixel-perfect zero-bleed print) -->
+    <div id="print-mount" class="hidden"></div>
+
+    <!-- Staff & Shifts Manager Modal -->
+    <div id="staff-manager-modal" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-sky-600 text-lg"></i>
+                    <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">Staff Shifts & Member Setup</h3>
+                </div>
+                <button onclick="closeModal('staff-manager-modal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+                <!-- Add / Edit Shift Form -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                    <h4 id="shift-modal-title" class="text-xs font-black text-slate-700 uppercase tracking-wider">Add New Staff Shift</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Shift / Group Name *</label>
+                            <input type="text" id="shift-name-input" placeholder="e.g. Mehrooz & Zain" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Working Shift Hours</label>
+                            <input type="text" id="shift-hours-input" placeholder="e.g. 2pm - 10pm" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-800">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Staff Member Names (comma-separated) *</label>
+                            <input type="text" id="shift-members-input" placeholder="e.g. Mehrooz, Zain (enables separate attendance for each person)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-sky-700">
+                            <p class="text-[10px] text-slate-400 mt-1">Separate names with commas or & to create individual attendance columns for each person in this shift.</p>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Commission Rate (%)</label>
+                            <input type="number" id="shift-comm-input" min="0" max="100" step="0.5" value="2.0" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Base Monthly Salary (PKR)</label>
+                            <input type="number" id="shift-base-salary-input" min="0" step="1000" value="0" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold font-mono">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-2">
+                        <button type="button" onclick="resetShiftForm()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-200">Reset Form</button>
+                        <button type="button" onclick="handleSaveShiftSubmit()" id="shift-form-submit-btn" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm">Save Shift</button>
+                    </div>
+                </div>
+
+                <!-- Existing Shifts List -->
+                <div>
+                    <h4 class="text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Active Shifts & Staff Roster</h4>
+                    <div id="staff-shifts-list" class="space-y-2">
+                        <!-- Injected by app.js -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotional Poster / Image Lightbox Modal -->
+    <div id="image-lightbox-modal" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden my-auto border border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-image text-sky-600 text-lg"></i>
+                    <h3 id="lightbox-title" class="font-black text-slate-800 text-sm uppercase tracking-wider">Promotional Poster Preview</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="lightbox-copy-btn" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-colors">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Copy for WhatsApp</span>
+                    </button>
+                    <button onclick="closeModal('image-lightbox-modal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-950 flex items-center justify-center min-h-[350px] max-h-[70vh] overflow-hidden">
+                <img id="lightbox-image" src="" alt="Poster Preview" class="max-h-[65vh] max-w-full object-contain rounded-xl shadow-lg transition-transform hover:scale-105">
+            </div>
+
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span class="flex items-center gap-1.5 font-medium">
+                    <i class="fa-solid fa-circle-info text-sky-500"></i>
+                    Click "Copy for WhatsApp" then press <kbd class="px-1.5 py-0.5 bg-white border border-slate-200 rounded font-mono font-bold text-slate-700">Ctrl + V</kbd> in your chat.
+                </span>
+                <button onclick="closeModal('image-lightbox-modal')" class="px-4 py-1.5 rounded-xl text-slate-600 font-bold hover:bg-slate-200 text-xs">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Area -->
+    <div id="toast-container"></div>
+
+    <!-- Footer Copyright -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>© Copyrights Azad Seo 2026. All rights reserved.</p>
+            <p class="font-mono text-[11px] text-slate-400">Built for GitHub Pages • Serverless Offline-Ready Architecture</p>
+        </div>
+    </footer>
+
+    <!-- Application Scripts -->
+    <script src="db.js"></script>
+    <script src="tools.js"></script>
+    <script src="salary.js"></script>
+    <script src="invoice.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
