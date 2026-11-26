@@ -824,6 +824,7 @@ async function handleSaveToolForm() {
         renderToolsList();
         updatePackageDock();
         if (typeof updateDatabaseStats === 'function') updateDatabaseStats();
+        window.GitHubLiveDB?.triggerAutoSync('Updated tool: ' + name);
     } catch (err) {
         console.error('Error saving tool:', err);
         showToast('Error saving tool: ' + err.message, 'error');
@@ -970,6 +971,7 @@ async function handleSavePlanForm() {
         closeModal('plan-editor-modal');
         await loadPlansFromDB();
         renderMarketingPlans();
+        window.GitHubLiveDB?.triggerAutoSync('Updated plan: ' + name);
     } catch (err) {
         console.error('Error saving plan:', err);
         showToast('Error saving plan: ' + err.message, 'error');
@@ -989,6 +991,7 @@ async function confirmDeletePlan(planId) {
         showToast(`Deleted ${plan.name} plan`, 'info');
         await loadPlansFromDB();
         renderMarketingPlans();
+        window.GitHubLiveDB?.triggerAutoSync('Deleted plan: ' + plan.name);
     } catch (err) {
         console.error('Error deleting plan:', err);
         showToast('Error deleting plan: ' + err.message, 'error');
@@ -1013,6 +1016,7 @@ async function confirmDeleteTool(toolId) {
         renderToolsList();
         updatePackageDock();
         if (typeof updateDatabaseStats === 'function') updateDatabaseStats();
+        window.GitHubLiveDB?.triggerAutoSync('Deleted tool: ' + tool.name);
     } catch (err) {
         console.error('Error deleting tool:', err);
         showToast('Error deleting tool: ' + err.message, 'error');
