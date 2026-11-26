@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-11-26T16:10:40.455Z",
+  "exportedAt": "2026-11-26T16:10:53.026Z",
   "settings": [
     {
       "key": "cloud_sync_enabled",
@@ -64,7 +64,7 @@
     },
     {
       "key": "github_last_synced",
-      "value": "26/11/2026, 21:10:27"
+      "value": "26/11/2026, 21:10:42"
     },
     {
       "key": "invoice_prefix",
@@ -395,6 +395,58 @@
       "daily_sale": 99854,
       "commission": 1997.0800000000002,
       "total_sale": 0
+    },
+    {
+      "day": 1,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 600,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 501
+    },
+    {
+      "day": 2,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 3322,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 502
+    },
+    {
+      "day": 8,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 423432,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 503
+    },
+    {
+      "day": 10,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 4,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 504
     }
   ],
   "tools": [
