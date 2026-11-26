@@ -455,6 +455,22 @@ async function initSettingsView() {
     setVal('setting-company-address', 'company_address', 'Lahore, Pakistan');
     setVal('setting-payment-info', 'payment_info', 'Bank: Meezan Bank Ltd | A/C: 0102030405 | Title: Azad SEO | JazzCash/EasyPaisa: 0300-1234567');
     setVal('setting-invoice-prefix', 'invoice_prefix', 'INV-');
+
+    // GitHub Live Database Configuration
+    setVal('gh-repo-input', 'github_repo', 'Emailmarketingbest/suite.azadseo.com');
+    setVal('gh-branch-input', 'github_branch', 'main');
+    setVal('gh-token-input', 'github_token', (typeof getPreconfiguredToken === 'function' ? getPreconfiguredToken() : (localStorage.getItem('azad_github_token') || '')));
+    
+    const autoSyncEl = document.getElementById('gh-autosync-toggle');
+    if (autoSyncEl) {
+        autoSyncEl.checked = (settings['github_auto_sync'] !== 'false');
+    }
+
+    const lastSynced = settings['github_last_synced'] || 'Connected';
+    const statusText = document.getElementById('github-sync-status-text');
+    if (statusText) {
+        statusText.innerText = `All data automatically syncs to GitHub repository database.json (Last synced: ${lastSynced})`;
+    }
 }
 
 // Save Settings Form
@@ -470,6 +486,57 @@ async function saveSystemSettings() {
     await setSetting('invoice_prefix', getVal('setting-invoice-prefix'));
 
     showToast('System Settings Saved!', 'success');
+    window.GitHubLiveDB?.triggerAutoSync('Updated system settings');
+}
+
+// GitHub Cloud Sync Action Handlers
+async function handleManualCloudSync() {
+    if (!window.GitHubLiveDB) return;
+    const ok = await window.GitHubLiveDB.pushToGitHub('Manual database sync from web UI', false);
+    if (ok) {
+        if (typeof updateDatabaseStats === 'function') updateDatabaseStats();
+        await initSettingsView();
+    }
+}
+
+async function handleManualCloudPull() {
+    if (!window.GitHubLiveDB) return;
+    showToast('Pulling latest database from GitHub...', 'info');
+    const ok = await window.GitHubLiveDB.pullFromGitHub(false);
+    if (ok) {
+        if (typeof updateDatabaseStats === 'function') updateDatabaseStats();
+        await initSettingsView();
+    }
+}
+
+async function saveGitHubSyncSettings() {
+    const repo = document.getElementById('gh-repo-input')?.value?.trim();
+    const branch = document.getElementById('gh-branch-input')?.value?.trim() || 'main';
+    const token = document.getElementById('gh-token-input')?.value?.trim();
+    const autoSync = document.getElementById('gh-autosync-toggle')?.checked;
+
+    if (token) {
+        try { localStorage.setItem('azad_github_token', token); } catch (e) {}
+    }
+    if (window.GitHubLiveDB) {
+        await window.GitHubLiveDB.setConfig({ repo, branch, token, autoSync });
+        showToast('✅ GitHub Live Database settings saved!', 'success');
+        await window.GitHubLiveDB.pullFromGitHub(true);
+    }
+}
+
+function toggleTokenVisibility() {
+    const input = document.getElementById('gh-token-input');
+    const icon = document.getElementById('token-eye-icon');
+    if (!input || !icon) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash text-xs';
+    } else {
+        input.type = 'password';
+        icon.className = 'fa-solid fa-eye text-xs';
+    }
 }
 
 // Update Database Stats Card in Settings
