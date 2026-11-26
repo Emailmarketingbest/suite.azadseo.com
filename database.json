@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-11-26T15:08:23.909Z",
+  "exportedAt": "2026-11-26T16:00:10.332Z",
   "settings": [
     {
       "key": "cloud_sync_enabled",
@@ -61,6 +61,10 @@
     {
       "key": "firebase_config",
       "value": ""
+    },
+    {
+      "key": "github_last_synced",
+      "value": "11/26/2026, 8:59:49 PM"
     },
     {
       "key": "invoice_prefix",
