@@ -459,6 +459,7 @@ async function saveInvoiceToDB() {
 
     try {
         await db.invoices.add(invoiceData);
+        window.GitHubLiveDB?.triggerAutoSync('Saved invoice: ' + invoiceData.invoice_no);
 
         // Auto-save Client if not already exists
         const existingClient = await db.clients.where('name').equalsIgnoreCase(clientName).first();
@@ -582,4 +583,5 @@ async function deletePastInvoice(id) {
     await db.invoices.delete(id);
     await loadInvoiceHistory();
     showToast('Invoice deleted', 'info');
+    window.GitHubLiveDB?.triggerAutoSync('Deleted invoice');
 }
