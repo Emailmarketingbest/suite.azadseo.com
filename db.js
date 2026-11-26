@@ -6,6 +6,7 @@
 
 // 1. Initialize Dexie Database
 const db = new Dexie('AzadSeoSuiteDB');
+window.db = db;
 
 // Define Schema
 db.version(1).stores({
