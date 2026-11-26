@@ -87,14 +87,17 @@
                     </button>
                 </nav>
 
-                <!-- Quick Status Badge -->
-                <div class="flex items-center gap-3">
-                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                <!-- Live Cloud DB Status & Sync Badge -->
+                <div class="flex items-center gap-2">
+                    <button id="github-live-db-badge" onclick="switchTab('settings')" title="Click to view Live GitHub Cloud Database settings" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold transition-all hover:bg-emerald-100 cursor-pointer">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>IndexedDB Active</span>
-                    </div>
-                    <button onclick="triggerDatabaseBackup()" title="1-Click JSON Backup" class="p-2 rounded-xl text-slate-500 hover:text-sky-600 hover:bg-slate-100 transition-colors">
-                        <i class="fa-solid fa-cloud-arrow-down text-lg"></i>
+                        <span class="hidden sm:inline">GitHub Live DB: Connected</span>
+                        <span class="sm:hidden">Live DB</span>
+                    </button>
+                    <button onclick="handleManualCloudSync()" title="Sync Live Database to GitHub" 
+                            class="p-2 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-slate-100 transition-colors border border-slate-200">
+                        <i class="fa-solid fa-cloud-arrow-up text-base"></i>
                     </button>
                 </div>
             </div>
@@ -701,19 +704,67 @@
                         </div>
                     </div>
 
-                    <!-- GitHub Pages Database Info Banner -->
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
-                        <div class="flex items-center gap-2 font-bold text-slate-800">
-                            <i class="fa-solid fa-circle-question text-sky-600"></i>
-                            <span>How the Database works on GitHub Pages:</span>
+                    <!-- GitHub Live Cloud Database Engine Panel -->
+                    <div class="p-5 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="p-2.5 rounded-xl bg-emerald-600 text-white shadow-sm flex items-center justify-center">
+                                    <i class="fa-brands fa-github text-xl"></i>
+                                </span>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-black text-slate-900 text-sm tracking-tight">GitHub Live Cloud Database</h4>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-200 text-emerald-900">Live Sync</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500" id="github-sync-status-text">All data automatically syncs to GitHub repository database.json</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="handleManualCloudSync()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+                                    <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+                                    <span>Sync to GitHub Now</span>
+                                </button>
+                                <button onclick="handleManualCloudPull()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all" title="Reload latest data from GitHub">
+                                    <i class="fa-solid fa-rotate text-xs text-slate-500"></i>
+                                    <span>Pull Latest</span>
+                                </button>
+                            </div>
                         </div>
-                        <p class="leading-relaxed">
-                            GitHub Pages only hosts static files, so traditional MySQL/PostgreSQL servers cannot run there. This suite uses 
-                            <strong>Dexie.js (IndexedDB)</strong> which gives you a high-capacity, lightning-fast database running directly inside your browser. All data stays saved even when you close the tab or restart your computer.
-                        </p>
-                        <p class="text-[11px] text-slate-500">
-                            <strong>Multi-device sync:</strong> Use the 1-click JSON export/import to transfer your data between devices, or connect free Firebase Firestore in seconds.
-                        </p>
+
+                        <!-- Configuration Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-emerald-100">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">GitHub Repository</label>
+                                <input type="text" id="gh-repo-input" value="Emailmarketingbest/suite.azadseo.com" 
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-mono-code focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Branch</label>
+                                <input type="text" id="gh-branch-input" value="main" 
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-mono-code focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Personal Access Token</label>
+                                <div class="relative">
+                                    <input type="password" id="gh-token-input" placeholder="GitHub Personal Access Token" 
+                                           class="w-full pl-3 pr-8 py-2 rounded-xl border border-slate-200 bg-white text-xs font-mono-code focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+                                    <button type="button" onclick="toggleTokenVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600">
+                                        <i id="token-eye-icon" class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2">
+                            <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-semibold text-slate-700">
+                                <input type="checkbox" id="gh-autosync-toggle" checked class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                                <span>Auto-Sync to GitHub on Every Save (Tools, Plans, Salaries, Invoices)</span>
+                            </label>
+                            <button onclick="saveGitHubSyncSettings()" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 underline">
+                                Save Connection Settings
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
