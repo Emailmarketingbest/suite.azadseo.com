@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-11-26T16:10:53.026Z",
+  "exportedAt": "2026-11-26T16:11:03.153Z",
   "settings": [
     {
       "key": "cloud_sync_enabled",
@@ -64,7 +64,7 @@
     },
     {
       "key": "github_last_synced",
-      "value": "26/11/2026, 21:10:42"
+      "value": "26/11/2026, 21:10:54"
     },
     {
       "key": "invoice_prefix",
@@ -447,6 +447,45 @@
       "attendance": {},
       "note": "",
       "id": 504
+    },
+    {
+      "day": 13,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 423,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 505
+    },
+    {
+      "day": 15,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 423,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 506
+    },
+    {
+      "day": 16,
+      "user_id": 1,
+      "year": 2026,
+      "month": 11,
+      "sales": 2342234,
+      "commission_percent": 2,
+      "advance": 0,
+      "status": "Present",
+      "attendance": {},
+      "note": "",
+      "id": 507
     }
   ],
   "tools": [
