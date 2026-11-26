@@ -361,6 +361,11 @@ function triggerAutoSave(day) {
                 await db.salary_entries.add(entry);
             }
 
+            // Trigger debounced cloud synchronization to GitHub repository
+            if (window.GitHubLiveDB?.triggerAutoSync) {
+                window.GitHubLiveDB.triggerAutoSync('Salary attendance updated');
+            }
+
             if (badge) {
                 badge.innerHTML = '<i class="fa-solid fa-cloud-check text-emerald-500"></i> Auto-saved';
                 badge.classList.add('save-pulse');
