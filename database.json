@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-11-26T16:11:03.153Z",
+  "exportedAt": "2026-11-26T16:12:41.600Z",
   "settings": [
     {
       "key": "cloud_sync_enabled",
@@ -64,7 +64,7 @@
     },
     {
       "key": "github_last_synced",
-      "value": "26/11/2026, 21:10:54"
+      "value": "26/11/2026, 21:11:52"
     },
     {
       "key": "invoice_prefix",
@@ -73,6 +73,10 @@
     {
       "key": "last_invoice_number",
       "value": "29"
+    },
+    {
+      "key": "payment_info",
+      "value": "Bank: Meezan Bank Ltd | A/C: 0000000000 | Title: Azad SEO | JazzCash/EasyPaisa: 0300-1234567Bank: Meezan Bank Ltd | A/C: 0000000000 | Title: Azad SEO | JazzCash/EasyPaisa: 0300-1234567"
     },
     {
       "key": "show_verification",
